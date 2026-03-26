@@ -8,4 +8,4 @@ cmds = ['npm ci']
 cmds = ['npm run build:railway']
 
 [start]
-cmd = 'npm start'
+cmd = 'npm run railway:migrate && npm start'
