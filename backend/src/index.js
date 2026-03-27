@@ -21,11 +21,11 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: function(origin, callback) {
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) !== -1) return callback(null, true);
+    if (origin.endsWith('.pages.dev')) return callback(null, true);
+    console.log('CORS blocked origin:', origin);
+    callback(null, false);
   },
   credentials: true
 }));
