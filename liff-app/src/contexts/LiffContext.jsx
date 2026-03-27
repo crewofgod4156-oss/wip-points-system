@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import liff from '@liff/liff';
+import liff from '@line/liff';
 
 const LiffContext = createContext();
 
