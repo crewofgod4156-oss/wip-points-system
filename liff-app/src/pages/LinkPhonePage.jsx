@@ -1,46 +1,18 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLiff } from '../contexts/LiffContext';
 import { updatePhoneNumber } from '../services/api';
 import Layout from '../components/Layout';
 import Loading from '../components/Loading';
-import { Phone, Shield, CheckCircle, AlertCircle, Smartphone } from 'lucide-react';
+import { Phone, CheckCircle, AlertCircle } from 'lucide-react';
 
 const LinkPhonePage = () => {
-  const { isReady, liff, accessToken, profile } = useLiff();
+  const { isReady, accessToken } = useLiff();
   const navigate = useNavigate();
   const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
-  const [linePhone, setLinePhone] = useState(null);
-  const [linePhoneLoading, setLinePhoneLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
-
-  const getLinePhone = async () => {
-    setLinePhoneLoading(true);
-    setError(null);
-    try {
-      if (liff.isApiAvailable('getDecodedIDToken')) {
-        const idToken = liff.getDecodedIDToken();
-        if (idToken?.phone_number) {
-          const cleaned = idToken.phone_number.replace(/[^0-9]/g, '');
-          let normalized = cleaned;
-          if (cleaned.startsWith('66') && cleaned.length === 11) {
-            normalized = '0' + cleaned.slice(2);
-          }
-          setLinePhone(normalized);
-          setPhone(normalized);
-          setLinePhoneLoading(false);
-          return;
-        }
-      }
-      setError('ไม่สามารถดึงเบอร์โทรจาก LINE ได้ กรุณากรอกเบอร์โทรด้วยตนเอง');
-    } catch (err) {
-      console.error('Get LINE phone error:', err);
-      setError('ไม่สามารถดึงเบอร์โทรจาก LINE ได้ กรุณากรอกเบอร์โทรด้วยตนเอง');
-    }
-    setLinePhoneLoading(false);
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -96,48 +68,14 @@ const LinkPhonePage = () => {
           </p>
         </div>
 
-        {/* Level 3: ดึงเบอร์จาก LINE */}
-        <div className="bg-white rounded-xl p-5 shadow mb-4">
-          <div className="flex items-center mb-3">
-            <Shield size={20} className="text-green-600 mr-2" />
-            <h3 className="font-bold text-gray-800">ดึงเบอร์จาก LINE (แนะนำ)</h3>
-          </div>
-          <p className="text-sm text-gray-600 mb-4">
-            ใช้เบอร์โทรที่ลงทะเบียนกับ LINE ของคุณ เพื่อความถูกต้อง
-          </p>
-          <button
-            onClick={getLinePhone}
-            disabled={linePhoneLoading}
-            className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-4 rounded-xl flex items-center justify-center disabled:opacity-50"
-          >
-            {linePhoneLoading ? (
-              <span className="animate-spin mr-2">⏳</span>
-            ) : (
-              <Smartphone size={20} className="mr-2" />
-            )}
-            {linePhoneLoading ? 'กำลังดึงข้อมูล...' : 'ดึงเบอร์จาก LINE'}
-          </button>
-          {linePhone && (
-            <div className="mt-3 bg-green-50 rounded-lg p-3 flex items-center">
-              <CheckCircle size={16} className="text-green-500 mr-2" />
-              <span className="text-green-700 font-medium">เบอร์จาก LINE: {linePhone}</span>
-            </div>
-          )}
-        </div>
-
-        {/* Divider */}
-        <div className="flex items-center my-4">
-          <div className="flex-1 border-t border-gray-300"></div>
-          <span className="px-3 text-sm text-gray-500">หรือ</span>
-          <div className="flex-1 border-t border-gray-300"></div>
-        </div>
-
-        {/* Level 1: กรอกเบอร์เอง */}
         <div className="bg-white rounded-xl p-5 shadow mb-4">
           <div className="flex items-center mb-3">
             <Phone size={20} className="text-blue-600 mr-2" />
-            <h3 className="font-bold text-gray-800">กรอกเบอร์โทรด้วยตนเอง</h3>
+            <h3 className="font-bold text-gray-800">กรอกเบอร์โทรศัพท์</h3>
           </div>
+          <p className="text-sm text-gray-600 mb-4">
+            กรุณากรอกเบอร์โทรที่ใช้ซื้อสินค้ากับทางร้าน
+          </p>
           <form onSubmit={handleSubmit}>
             <input
               type="tel"
