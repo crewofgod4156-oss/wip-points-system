@@ -84,9 +84,19 @@ export const redeemReward = async (req, res) => {
     const redemption = await Redemption.create(req.user.user_id, rewardId);
     const redemptionDetails = await Redemption.getById(redemption.redemption_id);
     
+    // Send LINE notifications (non-blocking)
+    const { notifyAdminRedemption, notifyUserRedemptionSuccess } = await import('../services/lineNotify.js');
+    notifyAdminRedemption(redemptionDetails).catch(err => 
+      console.error('Failed to send admin notification:', err)
+    );
+    notifyUserRedemptionSuccess(req.user.line_user_id, redemptionDetails).catch(err => 
+      console.error('Failed to send user notification:', err)
+    );
+    
     res.json({
       success: true,
-      redemption: redemptionDetails
+      redemption: redemptionDetails,
+      redemption_code: redemptionDetails.redemption_code
     });
   } catch (error) {
     console.error('Redeem reward error:', error);
