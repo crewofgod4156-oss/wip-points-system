@@ -6,6 +6,7 @@ export const verifyLineToken = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      console.error('No authorization header provided');
       return res.status(401).json({ error: 'No token provided' });
     }
 
@@ -15,7 +16,17 @@ export const verifyLineToken = async (req, res, next) => {
       params: { access_token: token }
     });
 
-    if (!response.data.client_id || response.data.client_id !== process.env.LINE_CHANNEL_ID) {
+    console.log('LINE token verification response:', {
+      client_id: response.data.client_id,
+      expected: process.env.LINE_CHANNEL_ID,
+      match: String(response.data.client_id) === String(process.env.LINE_CHANNEL_ID)
+    });
+
+    if (!response.data.client_id || String(response.data.client_id) !== String(process.env.LINE_CHANNEL_ID)) {
+      console.error('Channel ID mismatch:', {
+        received: response.data.client_id,
+        expected: process.env.LINE_CHANNEL_ID
+      });
       return res.status(401).json({ error: 'Invalid token' });
     }
 
@@ -24,9 +35,11 @@ export const verifyLineToken = async (req, res, next) => {
     });
 
     const profile = profileResponse.data;
+    console.log('LINE profile retrieved:', { userId: profile.userId, displayName: profile.displayName });
     
     let user = await User.findByLineUserId(profile.userId);
     if (!user) {
+      console.log('Creating new user:', profile.userId);
       user = await User.create({
         lineUserId: profile.userId,
         displayName: profile.displayName,
@@ -38,7 +51,7 @@ export const verifyLineToken = async (req, res, next) => {
     req.lineProfile = profile;
     next();
   } catch (error) {
-    console.error('Auth error:', error);
+    console.error('Auth error:', error.response?.data || error.message || error);
     return res.status(401).json({ error: 'Authentication failed' });
   }
 };
