@@ -140,18 +140,29 @@ const RedeemPage = () => {
                       !canRedeem ? 'opacity-60' : ''
                     }`}
                   >
-                    {reward.image_url && (
-                      <div className="h-48 bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center overflow-hidden">
+                    <div className="h-48 bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center overflow-hidden">
+                      {reward.image_url ? (
                         <img
                           src={reward.image_url}
                           alt={reward.name}
                           className="w-full h-full object-cover"
                           onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = '';
                             e.target.style.display = 'none';
+                            const parent = e.target.parentElement;
+                            if (parent && !parent.querySelector('.fallback-icon')) {
+                              const fallback = document.createElement('div');
+                              fallback.className = 'fallback-icon flex items-center justify-center w-full h-full';
+                              fallback.innerHTML = '<svg class="w-24 h-24 text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"></path></svg>';
+                              parent.appendChild(fallback);
+                            }
                           }}
                         />
-                      </div>
-                    )}
+                      ) : (
+                        <Gift size={64} className="text-purple-300" />
+                      )}
+                    </div>
                     
                     <div className="p-4">
                       <div className="flex justify-between items-start mb-2">
