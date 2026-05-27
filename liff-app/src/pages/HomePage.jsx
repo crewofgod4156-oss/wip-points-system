@@ -122,7 +122,7 @@ const HomePage = () => {
               </div>
               <div>
                 <p className="font-semibold text-gray-800">ซื้อสินค้า</p>
-                <p className="text-sm text-gray-600">ทุกๆ 20 บาท = 1 แต้ม</p>
+                <p className="text-sm text-gray-600">ทุกๆ 100 บาท = 1 แต้ม</p>
               </div>
             </div>
             <div className="flex items-start">
