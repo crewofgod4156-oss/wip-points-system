@@ -145,6 +145,50 @@ const HomePage = () => {
             </div>
           </div>
         </div>
+
+        <div className="bg-white rounded-xl p-6 shadow mt-6">
+          <h3 className="text-lg font-bold text-gray-800 mb-4">เงื่อนไขการสะสมแต้ม</h3>
+          <div className="space-y-4">
+            <div>
+              <p className="font-semibold text-gray-800 mb-1">1. อายุการใช้งานแต้ม</p>
+              <p className="text-sm text-gray-600 leading-relaxed">แต้มมีอายุ 1 ปี นับจากวันที่ได้รับ</p>
+              <p className="text-sm text-gray-600 leading-relaxed">แต้มที่หมดอายุจะถูกตัดออกโดยอัตโนมัติ โดยไม่สามารถเรียกคืนได้</p>
+            </div>
+
+            <div>
+              <p className="font-semibold text-gray-800 mb-1">2. สิทธิ์การเข้าร่วมรายการ</p>
+              <p className="text-sm text-gray-600 leading-relaxed">สำหรับ ลูกค้ารายย่อยเท่านั้น</p>
+              <p className="text-sm text-gray-600 leading-relaxed">ไม่รวมลูกค้า ราคาส่ง ตัวแทนจำหน่าย หรือคู่ค้าทางธุรกิจ</p>
+            </div>
+
+            <div>
+              <p className="font-semibold text-gray-800 mb-1">3. การใช้แต้ม / การแลกรางวัล</p>
+              <p className="text-sm text-gray-600 leading-relaxed">สามารถใช้แต้มแลกรับของรางวัลหรือสิทธิพิเศษตามที่บริษัทกำหนด แต้มไม่สามารถโอนรวม หรือใช้ข้ามบัญชีได้</p>
+            </div>
+
+            <div>
+              <p className="font-semibold text-gray-800 mb-1">4. ข้อจำกัดของแต้ม</p>
+              <p className="text-sm text-gray-600 leading-relaxed">แต้มสะสมไม่สามารถแลกเปลี่ยนหรือทอนเป็นเงินสด</p>
+              <p className="text-sm text-gray-600 leading-relaxed">ไม่สามารถใช้ร่วมกับโปรโมชั่นอื่นได้ (ตามเงื่อนไขที่กำหนด)</p>
+            </div>
+
+            <div>
+              <p className="font-semibold text-gray-800 mb-1">5. ของรางวัลและสิทธิประโยชน์</p>
+              <p className="text-sm text-gray-600 leading-relaxed">ของรางวัลมีจำนวนจำกัด และเป็นไปตามที่บริษัทกำหนด</p>
+              <p className="text-sm text-gray-600 leading-relaxed">บริษัทขอสงวนสิทธิ์ในการเปลี่ยนแปลงของรางวัลเป็นรายการอื่นที่มีมูลค่าใกล้เคียงกัน</p>
+            </div>
+
+            <div>
+              <p className="font-semibold text-gray-800 mb-1">6. การเปลี่ยนแปลงเงื่อนไข</p>
+              <p className="text-sm text-gray-600 leading-relaxed">บริษัทขอสงวนสิทธิ์ในการเปลี่ยนแปลงรายละเอียด เงื่อนไข อัตราการสะสมแต้มหรือของรางวัลได้โดยไม่ต้องแจ้งให้ทราบล่วงหน้า</p>
+            </div>
+
+            <div>
+              <p className="font-semibold text-gray-800 mb-1">7. การรับประกันสินค้า</p>
+              <p className="text-sm text-gray-600 leading-relaxed">สินค้าของรางวัลรับประกันตามมาตรฐานของบริษัท และเงื่อนไขของสินค้าแต่ละประเภท</p>
+            </div>
+          </div>
+        </div>
       </div>
     </Layout>
   );
