@@ -27,6 +27,8 @@ const RedeemPage = () => {
         getRewards(accessToken),
         getPoints(accessToken)
       ]);
+      console.log('Rewards data:', rewardsData);
+      console.log('First reward image_url:', rewardsData[0]?.image_url);
       setRewards(rewardsData);
       setPoints(pointsData);
     } catch (error) {
@@ -146,7 +148,12 @@ const RedeemPage = () => {
                           src={reward.image_url}
                           alt={reward.name}
                           className="w-full h-full object-cover"
+                          onLoad={(e) => {
+                            console.log('Image loaded successfully:', reward.image_url);
+                          }}
                           onError={(e) => {
+                            console.error('Image failed to load:', reward.image_url);
+                            console.error('Error event:', e);
                             e.target.onerror = null;
                             e.target.src = '';
                             e.target.style.display = 'none';
@@ -160,7 +167,10 @@ const RedeemPage = () => {
                           }}
                         />
                       ) : (
-                        <Gift size={64} className="text-purple-300" />
+                        <>
+                          {console.log('No image_url for reward:', reward.name)}
+                          <Gift size={64} className="text-purple-300" />
+                        </>
                       )}
                     </div>
                     
