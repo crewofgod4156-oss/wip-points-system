@@ -101,12 +101,28 @@ const RewardsPage = () => {
               return (
                 <div
                   key={reward.reward_id}
-                  className="bg-white rounded-xl p-4 shadow"
+                  className="bg-white rounded-xl shadow overflow-hidden"
                 >
-                  <div className="flex items-start">
-                    <div className="bg-gradient-to-br from-primary to-secondary rounded-lg p-3 mr-4">
-                      <Gift size={32} className="text-white" />
+                  {reward.image_url && (
+                    <div className="w-full h-48 bg-gray-100 flex items-center justify-center overflow-hidden">
+                      <img
+                        src={reward.image_url}
+                        alt={reward.name}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.style.display = 'none';
+                        }}
+                      />
                     </div>
+                  )}
+                  <div className="p-4">
+                  <div className="flex items-start">
+                    {!reward.image_url && (
+                      <div className="bg-gradient-to-br from-primary to-secondary rounded-lg p-3 mr-4">
+                        <Gift size={32} className="text-white" />
+                      </div>
+                    )}
                     
                     <div className="flex-1">
                       <h3 className="font-bold text-gray-800 text-lg">
@@ -148,6 +164,7 @@ const RewardsPage = () => {
                         </div>
                       )}
                     </div>
+                  </div>
                   </div>
                 </div>
               );
