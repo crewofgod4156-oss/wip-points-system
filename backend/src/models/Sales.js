@@ -3,20 +3,21 @@ import { query } from '../config/database.js';
 export const Sales = {
   async createBulk(salesData, batchId) {
     const values = salesData.map((sale, index) => 
-      `($${index * 6 + 1}, $${index * 6 + 2}, $${index * 6 + 3}, $${index * 6 + 4}, $${index * 6 + 5}, $${index * 6 + 6})`
+      `($${index * 7 + 1}, $${index * 7 + 2}, $${index * 7 + 3}, $${index * 7 + 4}, $${index * 7 + 5}, $${index * 7 + 6}, $${index * 7 + 7})`
     ).join(',');
     
     const params = salesData.flatMap(sale => [
       sale.lineUserId || null,
       sale.phoneNumber || null,
       sale.customerName || null,
+      sale.customerAddress || null,
       sale.saleDate,
       sale.amount,
       batchId
     ]);
     
     const result = await query(
-      `INSERT INTO sales_records (line_user_id, phone_number, customer_name, sale_date, amount, upload_batch_id)
+      `INSERT INTO sales_records (line_user_id, phone_number, customer_name, customer_address, sale_date, amount, upload_batch_id)
        VALUES ${values}
        RETURNING *`,
       params

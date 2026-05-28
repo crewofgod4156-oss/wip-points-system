@@ -2,7 +2,7 @@ import { Sales } from '../models/Sales.js';
 import { Points } from '../models/Points.js';
 import { User } from '../models/User.js';
 
-const POINTS_RATE = parseInt(process.env.POINTS_RATE || '20');
+const POINTS_RATE = parseInt(process.env.POINTS_RATE || '100');
 
 export const calculatePoints = (amount) => {
   return Math.floor(amount / POINTS_RATE);

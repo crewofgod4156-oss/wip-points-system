@@ -125,6 +125,9 @@ const migrations = [
   `,
   `
   ALTER TABLE users ADD COLUMN IF NOT EXISTS pdpa_consent_at TIMESTAMP;
+  `,
+  `
+  ALTER TABLE sales_records ADD COLUMN IF NOT EXISTS customer_address TEXT;
   `
 ];
 

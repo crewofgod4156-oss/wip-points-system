@@ -50,22 +50,28 @@ function parseSalesData(rawData) {
   rawData.forEach((row, index) => {
     try {
       const phoneNumber = normalizePhone(
+        row.mobilephone_number || row.mobile_phone || row.mobilephone ||
         row.phone_number || row.phoneNumber || row.phone || row.Phone || 
         row.PHONE_NUMBER || row.เบอร์โทร || row.เบอร์โทรศัพท์ || row.มือถือ || ''
       );
-      const lineUserId = String(row.line_user_id || row.lineUserId || row.LINE_USER_ID || '').trim();
       const customerName = String(
-        row.customer_name || row.customerName || row.name || row.Name || 
+        row.name || row.Name || row.customer_name || row.customerName ||
         row.CUSTOMER_NAME || row.ชื่อลูกค้า || row.ชื่อ || ''
       ).trim();
-      const amount = parseFloat(row.amount || row.Amount || row.AMOUNT || row.ยอดขาย || row.จำนวนเงิน || 0);
+      const customerAddress = String(
+        row.address || row.Address || row.ADDRESS || row.ที่อยู่ || ''
+      ).trim();
+      const amount = parseFloat(
+        row.sale_amount || row.saleAmount || row.SALE_AMOUNT ||
+        row.amount || row.Amount || row.AMOUNT || row.ยอดขาย || row.จำนวนเงิน || 0
+      );
       const saleDate = parseDateField(
         row.sale_date || row.saleDate || row.date || row.Date || 
         row.SALE_DATE || row.วันที่ || row.วันที่ขาย
       );
       
-      if (!phoneNumber && !lineUserId) {
-        errors.push({ row: index + 2, error: 'ต้องมีเบอร์โทรศัพท์หรือ LINE User ID' });
+      if (!phoneNumber) {
+        errors.push({ row: index + 2, error: 'ต้องมีเบอร์โทรศัพท์' });
         return;
       }
       
@@ -81,8 +87,9 @@ function parseSalesData(rawData) {
       
       salesData.push({
         phoneNumber,
-        lineUserId,
+        lineUserId: '',
         customerName,
+        customerAddress,
         amount,
         saleDate
       });

@@ -48,7 +48,7 @@ const UploadSalesPage = () => {
   };
 
   const downloadTemplate = () => {
-    const csvContent = 'line_user_id,sale_date,amount\nU1234567890abcdef,2024-03-26,1000\nU0987654321fedcba,2024-03-26,500';
+    const csvContent = 'mobilephone_number,name,address,sale_date,sale_amount\n0812345678,สมชาย ใจดี,123 ถ.สุขุมวิท กรุงเทพฯ,2024-03-26,1000\n0898765432,สมหญิง รักดี,456 ถ.พหลโยธิน กรุงเทพฯ,2024-03-26,500';
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
@@ -64,10 +64,10 @@ const UploadSalesPage = () => {
         <h3 className="font-semibold text-blue-900 mb-2">คำแนะนำ</h3>
         <ul className="text-sm text-blue-800 space-y-1 list-disc list-inside">
           <li>รองรับไฟล์ .xlsx, .xls และ .csv</li>
-          <li>ไฟล์ต้องมีคอลัมน์: line_user_id, sale_date, amount</li>
+          <li>ไฟล์ต้องมีคอลัมน์: mobilephone_number, name, address, sale_date, sale_amount</li>
           <li>วันที่ต้องอยู่ในรูปแบบ YYYY-MM-DD (เช่น 2024-03-26)</li>
           <li>ยอดขายต้องเป็นตัวเลข (เช่น 1000, 500.50)</li>
-          <li>แต้มจะถูกคำนวณอัตรา 20 บาท = 1 แต้ม</li>
+          <li>แต้มจะถูกคำนวณอัตรา 100 บาท = 1 แต้ม</li>
           <li>แต้มจะอัพเดทในวันถัดไป (T+1) โดยอัตโนมัติ</li>
         </ul>
         <button
