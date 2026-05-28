@@ -5,6 +5,7 @@ import DashboardPage from './pages/DashboardPage';
 import UploadSalesPage from './pages/UploadSalesPage';
 import RewardsPage from './pages/RewardsPage';
 import RedemptionsPage from './pages/RedemptionsPage';
+import UsersPage from './pages/UsersPage';
 import Layout from './components/Layout';
 
 const ProtectedRoute = ({ children }) => {
@@ -34,6 +35,16 @@ function App() {
               <ProtectedRoute>
                 <Layout>
                   <UploadSalesPage />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/users"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <UsersPage />
                 </Layout>
               </ProtectedRoute>
             }

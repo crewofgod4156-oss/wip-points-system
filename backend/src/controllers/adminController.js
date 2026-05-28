@@ -109,6 +109,28 @@ export const processPoints = async (req, res) => {
   }
 };
 
+export const getAllUsers = async (req, res) => {
+  try {
+    const { query: dbQuery } = await import('../config/database.js');
+    const result = await dbQuery(
+      `SELECT u.user_id, u.line_user_id, u.display_name, u.first_name, u.last_name, 
+              u.phone_number, u.address, u.registered, u.created_at, u.updated_at,
+              COALESCE(pb.total_points, 0) as total_points,
+              COALESCE(pb.used_points, 0) as used_points,
+              COALESCE(pb.available_points, 0) as available_points,
+              (SELECT COUNT(*) FROM sales_records sr WHERE sr.phone_number = u.phone_number AND sr.processed = true) as total_sales,
+              (SELECT COALESCE(SUM(sr.amount), 0) FROM sales_records sr WHERE sr.phone_number = u.phone_number AND sr.processed = true) as total_sales_amount
+       FROM users u
+       LEFT JOIN points_balance pb ON u.user_id = pb.user_id
+       ORDER BY u.created_at DESC`
+    );
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Get all users error:', error);
+    res.status(500).json({ error: 'Failed to get users' });
+  }
+};
+
 export const getSalesRecords = async (req, res) => {
   try {
     const { startDate, endDate } = req.query;

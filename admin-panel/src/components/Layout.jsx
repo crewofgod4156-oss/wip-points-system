@@ -1,6 +1,6 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { LayoutDashboard, Upload, Gift, Award, LogOut } from 'lucide-react';
+import { LayoutDashboard, Upload, Gift, Award, Users, LogOut } from 'lucide-react';
 
 const Layout = ({ children }) => {
   const navigate = useNavigate();
@@ -15,6 +15,7 @@ const Layout = ({ children }) => {
   const navItems = [
     { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
     { path: '/upload', icon: Upload, label: 'อัพโหลดยอดขาย' },
+    { path: '/users', icon: Users, label: 'ข้อมูลสมาชิก' },
     { path: '/rewards', icon: Gift, label: 'จัดการของรางวัล' },
     { path: '/redemptions', icon: Award, label: 'การแลกของ' }
   ];

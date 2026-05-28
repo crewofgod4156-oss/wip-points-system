@@ -6,6 +6,7 @@ import {
   upload,
   processPoints,
   getSalesRecords,
+  getAllUsers,
   getRewards,
   createReward,
   updateReward,
@@ -23,6 +24,7 @@ router.use(adminAuth);
 router.post('/upload-sales', upload.single('file'), uploadSales);
 router.post('/process-points', processPoints);
 router.get('/sales', getSalesRecords);
+router.get('/users', getAllUsers);
 router.get('/rewards', getRewards);
 router.post('/rewards', createReward);
 router.put('/rewards/:rewardId', updateReward);
