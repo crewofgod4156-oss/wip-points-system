@@ -5,6 +5,8 @@ import {
   uploadSales,
   upload,
   processPoints,
+  getPendingSalesPreview,
+  deleteSalesBatch,
   getSalesRecords,
   getAllUsers,
   getRewards,
@@ -24,6 +26,8 @@ router.use(adminAuth);
 router.post('/upload-sales', upload.single('file'), uploadSales);
 router.post('/process-points', processPoints);
 router.get('/sales', getSalesRecords);
+router.get('/sales/pending-preview', getPendingSalesPreview);
+router.delete('/sales/batch/:batchId', deleteSalesBatch);
 router.get('/users', getAllUsers);
 router.get('/rewards', getRewards);
 router.post('/rewards', createReward);

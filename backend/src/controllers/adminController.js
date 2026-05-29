@@ -109,6 +109,77 @@ export const processPoints = async (req, res) => {
   }
 };
 
+export const getPendingSalesPreview = async (req, res) => {
+  try {
+    const { query: dbQuery } = await import('../config/database.js');
+    const result = await dbQuery(
+      `SELECT sr.record_id, sr.phone_number, sr.customer_name, sr.customer_address,
+              sr.sale_date, sr.amount, sr.upload_batch_id, sr.created_at,
+              COALESCE(u.user_id, u2.user_id) as matched_user_id,
+              COALESCE(u.display_name, u2.display_name) as matched_display_name,
+              COALESCE(u.first_name, u2.first_name) as matched_first_name,
+              COALESCE(u.last_name, u2.last_name) as matched_last_name,
+              CASE WHEN COALESCE(u.user_id, u2.user_id) IS NOT NULL THEN true ELSE false END as is_matched
+       FROM sales_records sr
+       LEFT JOIN users u ON sr.phone_number = u.phone_number AND sr.phone_number IS NOT NULL AND sr.phone_number != ''
+       LEFT JOIN users u2 ON sr.line_user_id = u2.line_user_id AND sr.line_user_id IS NOT NULL AND sr.line_user_id != ''
+       WHERE sr.processed = false
+       ORDER BY sr.upload_batch_id DESC, sr.sale_date DESC`
+    );
+    
+    const batches = {};
+    result.rows.forEach(row => {
+      const batchId = row.upload_batch_id;
+      if (!batches[batchId]) {
+        batches[batchId] = {
+          batch_id: batchId,
+          uploaded_at: row.created_at,
+          records: [],
+          total_amount: 0,
+          matched_count: 0,
+          unmatched_count: 0
+        };
+      }
+      batches[batchId].records.push(row);
+      batches[batchId].total_amount += parseFloat(row.amount);
+      if (row.is_matched) {
+        batches[batchId].matched_count++;
+      } else {
+        batches[batchId].unmatched_count++;
+      }
+    });
+    
+    res.json(Object.values(batches));
+  } catch (error) {
+    console.error('Get pending sales preview error:', error);
+    res.status(500).json({ error: 'Failed to get pending sales preview' });
+  }
+};
+
+export const deleteSalesBatch = async (req, res) => {
+  try {
+    const { batchId } = req.params;
+    const { query: dbQuery } = await import('../config/database.js');
+    
+    const result = await dbQuery(
+      'DELETE FROM sales_records WHERE upload_batch_id = $1 AND processed = false RETURNING *',
+      [batchId]
+    );
+    
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Batch not found or already processed' });
+    }
+    
+    res.json({ 
+      message: `ลบ ${result.rows.length} รายการสำเร็จ`,
+      deletedCount: result.rows.length 
+    });
+  } catch (error) {
+    console.error('Delete sales batch error:', error);
+    res.status(500).json({ error: 'Failed to delete batch' });
+  }
+};
+
 export const getAllUsers = async (req, res) => {
   try {
     const { query: dbQuery } = await import('../config/database.js');

@@ -65,6 +65,18 @@ export const updateReward = async (token, rewardId, updates) => {
   return response.data;
 };
 
+export const getPendingSalesPreview = async (token) => {
+  const api = createApiClient(token);
+  const response = await api.get('/admin/sales/pending-preview');
+  return response.data;
+};
+
+export const deleteSalesBatch = async (token, batchId) => {
+  const api = createApiClient(token);
+  const response = await api.delete(`/admin/sales/batch/${batchId}`);
+  return response.data;
+};
+
 export const getAllUsers = async (token) => {
   const api = createApiClient(token);
   const response = await api.get('/admin/users');
