@@ -10,7 +10,7 @@ export function formatSlipResult(result) {
 export async function handleSlipEvent(event, request = fetch, env = process.env) {
   if (event.type !== 'message' || event.message?.type !== 'image') return;
   if (env.SLIPOK_ENABLED !== 'true') { console.log('[SlipOK] skipped: SLIPOK_ENABLED must be true'); return; }
-  if (event.source?.type !== 'user') { console.log('[SlipOK] skipped: only one-to-one chats supported'); return; }
+  if (!['user', 'group', 'room'].includes(event.source?.type)) { console.log('[SlipOK] skipped: unsupported chat source'); return; }
   const missing = ['SLIPOK_API_KEY', 'SLIPOK_BRANCH_ID', 'LINE_CHANNEL_ACCESS_TOKEN'].filter(key => !env[key]);
   if (missing.length || !event.replyToken) { console.log('[SlipOK] skipped: missing configuration', missing.join(','), 'reply token present:', Boolean(event.replyToken)); return; }
   console.log('[SlipOK] processing image');

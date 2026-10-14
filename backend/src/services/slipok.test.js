@@ -12,7 +12,7 @@ test('signature uses exact bytes', () => {
   assert.equal(validateSignature(Buffer.from('{"events":[]}'), sig), false);
   assert.equal(validateSignature(raw, 'invalid'), false);
 });
-test('all customers can upload regardless of old allowlist; disabled and group events are ignored', async () => {
+test('all customers can upload regardless of old allowlist; disabled and unsupported events are ignored', async () => {
   const env = {SLIPOK_ENABLED:'true',SLIPOK_TEST_USER_IDS:'Utest',SLIPOK_API_KEY:'test',SLIPOK_BRANCH_ID:'123',LINE_CHANNEL_ACCESS_TOKEN:'test'};
   const event = {type:'message',webhookEventId:'test-event',source:{type:'user',userId:'Ucustomer'},message:{type:'image',id:'1'},replyToken:'reply'};
   const calls = [];
@@ -27,7 +27,7 @@ test('all customers can upload regardless of old allowlist; disabled and group e
     return Response.json({});
   };
   await handleSlipEvent(event,request,{...env,SLIPOK_ENABLED:'false'});
-  await handleSlipEvent({...event,source:{type:'group',groupId:'group'}},request,env);
+  await handleSlipEvent({...event,source:{type:'unknown'}},request,env);
   assert.equal(calls.length,0);
   await handleSlipEvent(event,request,env);
   await handleSlipEvent(event,request,env);
@@ -62,5 +62,26 @@ test('non-slip images are silent while slip and configuration errors still reply
       return Response.json({});
     }, env);
     assert.equal(replies, [1007,1008].includes(Number(code)) ? 0 : 1);
+  }
+});
+test('group and room images reply in the originating chat, and non-slip images stay silent', async () => {
+  const env = {SLIPOK_ENABLED:'true',SLIPOK_API_KEY:'test',SLIPOK_BRANCH_ID:'123',LINE_CHANNEL_ACCESS_TOKEN:'test'};
+  for (const source of [{type:'group',groupId:'group'}, {type:'room',roomId:'room'}]) {
+    for (const code of [0,1007,1008]) {
+      const replies = [];
+      const replyToken = source.type + '-reply-' + code;
+      await handleSlipEvent({type:'message',webhookEventId:replyToken,source,message:{type:'image',id:'group-image'},replyToken}, async (url, opts) => {
+        if (url.includes('api-data')) return new Response(new Uint8Array([1,2]), {headers:{'content-type':'image/png'}});
+        if (url.includes('api.slipok')) return code ? Response.json({success:false,code},{status:400}) : Response.json({success:true,data:{success:true,amount:250,transRef:'test-ref'}});
+        assert.equal(url, 'https://api.line.me/v2/bot/message/reply');
+        replies.push(JSON.parse(opts.body));
+        return Response.json({});
+      },env);
+      assert.equal(replies.length,code ? 0 : 1);
+      if (!code) {
+        assert.equal(replies[0].replyToken,replyToken);
+        assert.match(replies[0].messages[0].text,/250.00/);
+      }
+    }
   }
 });
