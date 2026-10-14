@@ -6,6 +6,7 @@ import fs from 'fs';
 import userRoutes from './routes/userRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import webhookRoutes from './routes/webhookRoutes.js';
+import messengerRoutes from './routes/messengerRoutes.js';
 import { processPendingSales } from './services/pointsProcessor.js';
 
 dotenv.config();
@@ -45,6 +46,7 @@ app.get('/health', (req, res) => {
 app.use('/api/user', userRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api', webhookRoutes);
+app.use('/api', messengerRoutes);
 
 app.use((err, req, res, next) => {
   console.error('Error:', err);
